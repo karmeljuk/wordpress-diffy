@@ -32,7 +32,7 @@ class Diffy_Admin {
    * Activate the plugin
    */
   public function activate() {
-    add_option( 'activated_plugin', 'wordpress-diffy' ); //ToDo
+    add_option( 'activated_plugin', 'wordpress-diffy' );   
   }
 
   /**

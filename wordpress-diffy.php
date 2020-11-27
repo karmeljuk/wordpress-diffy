@@ -23,6 +23,7 @@
  * Autoload helper classes.
  */
 $diffy_autoload_file = plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+$plugin_main_file = plugin_basename(__FILE__);
 
 if ( is_readable( $diffy_autoload_file ) ) {
   require $diffy_autoload_file;
@@ -40,8 +41,21 @@ if ( class_exists( 'Diffy_Admin' ) ) {
   // Installation hook
   register_activation_hook( __FILE__, array( 'Diffy_Admin', 'activate' ) );
 
+  // Pplugin settings link
+  add_filter( "plugin_action_links_$plugin_main_file", 'add_plugin_settings_link' ); 
+
   // instantiate the plugin class    
   $admin = new Diffy_Admin( 'wordpress-diffy', '0.9.0' );
+}
+
+/**
+ * Add plugin settings link
+ */
+function add_plugin_settings_link($links)
+{
+  $settings_link = '<a href="admin.php?page=wordpress-diffy">Settings</a>';
+  array_push($links, $settings_link);
+  return $links;
 }
 
 /**
@@ -74,7 +88,7 @@ function diffy_self_deactivate() {
 
   if ( $is_deactivated === null ) {
     $is_deactivated = true;
-    deactivate_plugins( plugin_basename( __FILE__ ) );
+    deactivate_plugins( $plugin_main_file );
     if ( isset( $_GET['activate'] ) ) {
       unset( $_GET['activate'] );
     }
